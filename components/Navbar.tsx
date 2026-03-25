@@ -1,13 +1,19 @@
 
-import React from 'react';
-import { NavigationSection } from '../types';
+import React, { useState, useEffect } from 'react';
 
-interface NavbarProps {
-  activeSection: NavigationSection;
-}
+const Navbar: React.FC = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const EXTERNAL_LINK = "https://t.acrsmartcam.com/402888/8873/37511?aff_sub5=SF_006OG000004lmDN";
 
-const Navbar: React.FC<NavbarProps> = ({ activeSection }) => {
-  const scrollTo = (id: string) => {
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
@@ -15,16 +21,19 @@ const Navbar: React.FC<NavbarProps> = ({ activeSection }) => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-black/40 backdrop-blur-xl border-b border-white/5">
-      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-        <div className="flex items-center space-x-3 group cursor-pointer" onClick={() => scrollTo('home')}>
-          <div className="w-8 h-8 bg-red-950 rounded-full flex items-center justify-center animate-pulse group-hover:scale-110 transition-transform">
-            <div className="w-2 h-2 bg-red-600 rounded-full shadow-[0_0_10px_#991b1b]"></div>
+    <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-700 ${isScrolled ? 'py-4 glass-panel' : 'py-10'}`}>
+      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+        <div 
+          className="flex items-center space-x-4 cursor-pointer group"
+          onClick={() => scrollToSection('home')}
+        >
+          <div className="w-6 h-6 bg-red-600 rounded-full flex items-center justify-center animate-pulse group-hover:scale-110 transition-transform">
+            <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
           </div>
-          <span className="font-serif text-xl tracking-tighter font-bold uppercase text-white">Late Nights Vibe</span>
+          <span className="font-serif text-lg tracking-tighter font-bold uppercase text-white">softdesireroom.com</span>
         </div>
 
-        <div className="hidden md:flex items-center space-x-12">
+        <div className="hidden md:flex items-center space-x-10">
           {[
             { id: 'home', label: 'Entrance' },
             { id: 'philosophy', label: 'Rhythm' },
@@ -33,22 +42,22 @@ const Navbar: React.FC<NavbarProps> = ({ activeSection }) => {
           ].map((item) => (
             <button
               key={item.id}
-              onClick={() => scrollTo(item.id)}
-              className={`text-[11px] tracking-[0.4em] font-medium transition-all duration-300 uppercase ${
-                activeSection === item.id ? 'text-red-500' : 'text-white/40 hover:text-white'
-              }`}
+              onClick={() => scrollToSection(item.id)}
+              className="text-[10px] tracking-[0.4em] font-medium text-white/40 hover:text-white transition-all duration-300 uppercase"
             >
               {item.label}
             </button>
           ))}
         </div>
 
-        <button 
-          onClick={() => scrollTo('experience')}
-          className="px-6 py-2 border border-red-900 text-[10px] tracking-[0.3em] font-bold text-red-500 hover:bg-red-950 hover:text-white transition-all duration-500 uppercase rounded-sm"
+        <a 
+          href={EXTERNAL_LINK}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-8 py-2.5 bg-white text-black text-[10px] tracking-[0.3em] font-bold hover:bg-red-600 hover:text-white transition-all duration-500 uppercase rounded-full text-center"
         >
-          Private Access
-        </button>
+          Access
+        </a>
       </div>
     </nav>
   );
