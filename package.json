@@ -1,18 +1,17 @@
 {
-  "name": "secret-desire-lounge",
+  "name": "late-nights-vibe-|-premium-private-sanctuary",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview",
-    "lint": "tsc --noEmit"
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@google/genai": "^1.39.0",
     "react-dom": "^19.2.4",
-    "react": "^19.2.4"
+    "react": "^19.2.4",
+    "@google/genai": "^1.39.0"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
