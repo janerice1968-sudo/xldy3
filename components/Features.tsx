@@ -22,7 +22,7 @@ const Features: React.FC = () => {
 
   return (
     <section className="py-24 bg-[#FAF5F5]">
-      <div className="container mx-auto px-6">
+      <div className="max-w-[1200px] mx-auto px-6">
         <div className="grid md:grid-cols-3 gap-16">
           {features.map((f, i) => (
             <div key={i} className="relative">
@@ -31,8 +31,8 @@ const Features: React.FC = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={f.icon} />
                 </svg>
               </div>
-              <h4 className="text-2xl font-serif mb-4 text-[#1C1C1C]">{f.title}</h4>
-              <p className="text-[#1C1C1C]/60 leading-relaxed italic">"{f.desc}"</p>
+              <h4 className="text-2xl font-serif mb-4 text-[#1A1A1A]">{f.title}</h4>
+              <p className="text-[#1A1A1A]/60 leading-relaxed italic">"{f.desc}"</p>
             </div>
           ))}
         </div>
