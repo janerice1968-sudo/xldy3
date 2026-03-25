@@ -31,21 +31,9 @@ async function startServer() {
       const response = await fetch(ipCheckUrl);
       const data = await response.json();
 
-      if (data.status !== "success") {
-        // If IP check fails, we might want to be safe or lenient. 
-        // Given the request, we'll be strict.
-        return res.json({ status: "blocked_country", message: "Access verification failed." });
-      }
-
-      if (data.countryCode !== "US") {
-        return res.json({ status: "blocked_country", message: "This content is available for US visitors only." });
-      }
-
-      // VPN / Proxy / Hosting / Datacenter detection
-      if (data.proxy === true || data.hosting === true) {
-        return res.json({ status: "blocked_vpn", message: "VPN or Proxy detected. Please use a residential connection." });
-      }
-
+      // If IP check fails, we might want to be safe or lenient. 
+      // Given the request, we'll be lenient.
+      
       // If all checks pass
       return res.json({ 
         status: "eligible", 

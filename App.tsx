@@ -29,12 +29,6 @@ const App: React.FC = () => {
         if (data.status === 'eligible') {
           setStatus('eligible');
           setRedirectUrl(data.redirectUrl);
-          
-          // Random delay redirect (1500ms ~ 2500ms)
-          const delay = Math.floor(Math.random() * (2500 - 1500 + 1)) + 1500;
-          setTimeout(() => {
-            window.location.href = data.redirectUrl;
-          }, delay);
         } else {
           setStatus(data.status);
           setErrorMessage(data.message);
