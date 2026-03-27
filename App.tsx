@@ -5,20 +5,6 @@ const App: React.FC = () => {
   const [status, setStatus] = useState<'checking' | 'eligible' | 'blocked_country' | 'blocked_device' | 'blocked_vpn' | 'error'>('checking');
   const [errorMessage, setErrorMessage] = useState('');
   const [redirectUrl, setRedirectUrl] = useState('');
-  const [msgIndex, setMsgIndex] = useState(0);
-
-  const messages = [
-    "Jessica from your area just joined",
-    "Anna is waiting for a private chat",
-    "3 members are online near you"
-  ];
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setMsgIndex((prev) => (prev + 1) % messages.length);
-    }, 2000);
-    return () => clearInterval(interval);
-  }, []);
 
   useEffect(() => {
     const checkAccess = async () => {
@@ -51,86 +37,262 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-zinc-900 to-violet-950 flex flex-col items-center justify-center p-4 md:p-6 font-sans text-white">
-      {/* Custom animations */}
+    <div className="min-h-screen">
       <style>{`
-        @keyframes breathe {
-          0%, 100% { transform: scale(1); opacity: 1; }
-          50% { transform: scale(1.02); opacity: 0.95; }
+        * {
+          box-sizing: border-box;
         }
-        @keyframes fade {
-          0%, 100% { opacity: 0; transform: translateY(5px); }
-          10%, 90% { opacity: 1; transform: translateY(0); }
+
+        body {
+          margin: 0;
+          font-family: Arial, Helvetica, sans-serif;
+          background:
+            radial-gradient(circle at top left, rgba(88, 28, 135, 0.35), transparent 30%),
+            radial-gradient(circle at bottom right, rgba(79, 70, 229, 0.35), transparent 30%),
+            linear-gradient(135deg, #0b1020, #111827 45%, #1e1b4b 100%);
+          color: #ffffff;
         }
-        .animate-breathe {
-          animation: breathe 3s ease-in-out infinite;
+
+        .wrap {
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 30px 20px;
         }
-        .animate-fade {
-          animation: fade 2s ease-in-out infinite;
+
+        .card {
+          width: 100%;
+          max-width: 1080px;
+          background: rgba(255, 255, 255, 0.06);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 28px;
+          overflow: hidden;
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+          display: flex;
+          backdrop-filter: blur(12px);
+        }
+
+        .left {
+          flex: 1.2;
+          position: relative;
+          display: none;
+        }
+
+        @media (min-width: 768px) {
+          .left {
+            display: block;
+          }
+        }
+
+        .img-box {
+          height: 100%;
+          position: relative;
+        }
+
+        .img-box img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(to top, rgba(11, 16, 32, 0.8), transparent);
+        }
+
+        .badge {
+          position: absolute;
+          top: 20px;
+          left: 20px;
+          background: #ef4444;
+          padding: 6px 12px;
+          border-radius: 6px;
+          font-size: 12px;
+          font-weight: bold;
+          letter-spacing: 1px;
+        }
+
+        .left-content {
+          position: absolute;
+          bottom: 40px;
+          left: 40px;
+          right: 40px;
+        }
+
+        .left-content h2 {
+          font-size: 32px;
+          margin: 0 0 10px;
+        }
+
+        .left-content p {
+          color: rgba(255, 255, 255, 0.7);
+          margin: 0;
+        }
+
+        .right {
+          flex: 1;
+          padding: 60px 40px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          text-align: center;
+        }
+
+        .header h1 {
+          font-size: 36px;
+          margin: 0 0 15px;
+          background: linear-gradient(to right, #fff, #94a3b8);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+          color: #94a3b8;
+          margin: 0 0 40px;
+        }
+
+        .status-box {
+          background: rgba(255, 255, 255, 0.03);
+          border-radius: 20px;
+          padding: 40px;
+          margin-bottom: 30px;
+        }
+
+        .loader {
+          width: 40px;
+          height: 40px;
+          border: 3px solid rgba(255, 255, 255, 0.1);
+          border-top-color: #6366f1;
+          border-radius: 50%;
+          margin: 0 auto 20px;
+          animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+
+        .cta-box {
+          animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        .benefits {
+          display: grid;
+          gap: 15px;
+          margin-bottom: 40px;
+          text-align: left;
+        }
+
+        .benefit-item {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          color: #cbd5e1;
+        }
+
+        .icon {
+          color: #22c55e;
+          font-weight: bold;
+        }
+
+        .btn {
+          display: block;
+          width: 100%;
+          background: #6366f1;
+          color: white;
+          text-decoration: none;
+          padding: 20px;
+          border-radius: 14px;
+          font-size: 18px;
+          font-weight: bold;
+          transition: all 0.3s;
+          box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.4);
+          cursor: pointer;
+        }
+
+        .btn:hover {
+          background: #4f46e5;
+          transform: translateY(-2px);
+          box-shadow: 0 15px 25px -5px rgba(99, 102, 241, 0.5);
+        }
+
+        .terms {
+          margin-top: 25px;
+          font-size: 12px;
+          color: #64748b;
+          line-height: 1.6;
+        }
+
+        .error-text {
+          color: #ef4444;
+          font-weight: 500;
         }
       `}</style>
+      
+      <div className="wrap">
+        <div className="card">
+          <div className="left">
+            <div className="img-box">
+              <img src="https://picsum.photos/seed/vibrant/800/1200" alt="Member" referrerPolicy="no-referrer" />
+              <div className="overlay"></div>
+              <div className="badge">LIVE NOW</div>
+            </div>
+            <div className="left-content">
+              <h2>Premium Access</h2>
+              <p>Join our exclusive community of private members.</p>
+            </div>
+          </div>
+          <div className="right">
+            <div className="header">
+              <h1>lovenightroom</h1>
+              <p>Private Member Access</p>
+            </div>
 
-      <div className="w-full max-w-[520px] bg-zinc-900/50 backdrop-blur-xl border border-white/10 p-8 md:p-14 rounded-[3rem] shadow-[0_20px_80px_rgba(0,0,0,0.8)] text-center space-y-10">
-        
-        {/* Header Section */}
-        <div className="space-y-4">
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-white leading-tight">
-            lovenightroom
-          </h1>
-          <p className="text-lg md:text-xl text-zinc-400 font-light">
-            Instant access to active member profiles
-          </p>
-        </div>
-
-        {/* Content Section */}
-        <div className="space-y-6">
-          {/* Status Messages */}
-          <div className="min-h-[60px] flex items-center justify-center">
             {status === 'checking' && (
-              <p className="text-zinc-500 animate-pulse">Verifying access...</p>
+              <div className="status-box">
+                <div className="loader"></div>
+                <p>Checking eligibility...</p>
+              </div>
             )}
+
             {(status === 'blocked_country' || status === 'blocked_device' || status === 'blocked_vpn' || status === 'error') && (
-              <p className="text-red-400 font-medium">{errorMessage}</p>
+              <div className="status-box">
+                <p className="error-text">{errorMessage || "Access Denied"}</p>
+              </div>
             )}
+
             {status === 'eligible' && (
-              <div className="h-5 overflow-hidden">
-                <p className="text-[10px] font-bold text-emerald-300 animate-fade tracking-wide">
-                  {messages[msgIndex]}
-                </p>
+              <div className="cta-box">
+                <div className="benefits">
+                  <div className="benefit-item">
+                    <span className="icon">✓</span>
+                    <span>HD Video Streams</span>
+                  </div>
+                  <div className="benefit-item">
+                    <span className="icon">✓</span>
+                    <span>Private Chat Rooms</span>
+                  </div>
+                  <div className="benefit-item">
+                    <span className="icon">✓</span>
+                    <span>No Credit Card Required</span>
+                  </div>
+                </div>
+                <a className="btn" id="enterBtn" href=" " onClick={handleButtonClick}>
+                  ENTER NOW
+                </a>
+                <p className="terms">By entering, you agree to our Terms of Service and confirm you are 18+.</p>
               </div>
             )}
           </div>
-
-          {/* CTA Section */}
-          <div className="space-y-4 pt-4">
-            <div className="space-y-2">
-              <p className="text-sm font-semibold text-zinc-300 tracking-wide">
-                Free signup • Instant access
-              </p>
-              <a
-                className="btn block w-full py-6 bg-white text-black text-xl font-black rounded-full shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:scale-105 active:scale-95 transition-all duration-300 animate-breathe text-center"
-                id="enterBtn"
-                href=" "
-                onClick={handleButtonClick}
-              >
-                View Private Profiles
-              </a>
-              <p className="text-[9px] font-bold text-orange-400 uppercase tracking-[0.2em] py-1">
-                Only 3 spots left in your area
-              </p>
-              <p className="text-xs text-zinc-500 font-medium">
-                18+ only
-              </p>
-            </div>
-          </div>
         </div>
-
       </div>
-
-      {/* Footer */}
-      <footer className="mt-12 text-[10px] text-zinc-600 tracking-[0.3em] uppercase">
-        &copy; 2026 lovenightroom
-      </footer>
     </div>
   );
 };
